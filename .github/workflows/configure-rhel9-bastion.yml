@@ -1,0 +1,50 @@
+name: Configure RHEL 9 Bastion
+on:
+  workflow_dispatch:
+    inputs:
+      hostname:
+        description: 'hostname'
+        required: true
+        default: hostname
+jobs:
+  configure-rhel9-equinix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+    - name: Set Environment Variables
+      run: |
+        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+          echo "TARGET_SERVER=${{ github.event.inputs.target_server }}" >> $GITHUB_ENV
+          echo "DOMAIN=${{ github.event.inputs.domain }}" >> $GITHUB_ENV
+          echo "FORWARDER=${{ github.event.inputs.forwarder }}" >> $GITHUB_ENV
+          echo "HOSTNAME=${{ github.event.inputs.hostname }}" >> $GITHUB_ENV
+        elif [ "${{ github.event_name }}" == "repository_dispatch" ]; then
+          echo "TARGET_SERVER=${{ github.event.client_payload.data_key.target_server }}" >> $GITHUB_ENV
+          echo "DOMAIN=${{ github.event.client_payload.data_key.domain }}" >> $GITHUB_ENV
+          echo "FORWARDER=${{ github.event.client_payload.data_key.forwarder }}" >> $GITHUB_ENV
+          echo "HOSTNAME=${{ github.event.client_payload.data_key.hostname }}" >> $GITHUB_ENV
+        fi
+    - name: Configure RHEL 9 Equinix Server
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ env.HOSTNAME }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: ${{ secrets.PORT }}
+        command_timeout: 30m
+        script: | 
+          sudo yum install git -y 
+          if [ -d "/opt/rhel9-bootstrap" ]; then
+            cd /opt/rhel9-bootstrap
+            git config --global --add safe.directory /opt/rhel9-bootstrap
+            git config pull.rebase false
+            git pull
+          else
+            cd /opt/
+            sudo usermod -aG users ${{ secrets.USERNAME }}
+            sudo chown -R root:users /opt
+            sudo chmod -R g+w /opt
+            git clone https://github.com/tosin2013/rhel9-bootstrap.git
+          fi
+          cd /opt/rhel9-bootstrap
+          sudo ./setup-bastion.sh
