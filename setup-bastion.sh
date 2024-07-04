@@ -80,6 +80,7 @@ fi
 if ! command -v ansible-navigator &> /dev/null; then
     echo "ansible-navigator not found. Installing..."
     sudo subscription-manager repos --list | grep ansible-automation-platform-2.4-for-rhel-9-x86_64-rpms || exit $?
+    sudo subscription-manager repos --enable=ansible-automation-platform-2.4-for-rhel-9-x86_64-rpms || exit $?
     sudo dnf -y install ansible-navigator
     ansible-navigator --version
 else
