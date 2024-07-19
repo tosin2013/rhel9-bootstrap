@@ -29,6 +29,7 @@ sudo dnf -y install \
   containernetworking-plugins \
   iputils \
   iproute \
+  runc \
   tmux
 
 sudo dnf -y groupinstall "Development Tools"
