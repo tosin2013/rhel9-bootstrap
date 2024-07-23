@@ -16,6 +16,7 @@ sudo dnf -y install \
   nano \
   vim \
   unzip \
+  ansible-core \
   bind-utils \
   tar \
   util-linux-user \
