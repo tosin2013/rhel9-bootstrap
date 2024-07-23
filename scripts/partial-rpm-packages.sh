@@ -31,6 +31,7 @@ sudo dnf -y install \
   iputils \
   iproute \
   runc \
+  python3-pip \
   tmux
 
 sudo dnf -y groupinstall "Development Tools"
