@@ -75,11 +75,11 @@ jobs:
           if ! grep -q "export AWS_REGION=" /home/${{ secrets.USERNAME }}/.bashrc; then
             echo "export AWS_REGION=${{ secrets.AWS_REGION }}" >> /home/${{ secrets.USERNAME }}/.bashrc
           fi
-          if ! grep -q "export BASE_DOMAIN=${{ secrets.BASE_DOMAIN }}" /home/${{ secrets.USERNAME }}/.bashrc; then
-            echo "export BASE_DOMAIN=${{ secrets.BASE_DOMAIN }}" >> /home/${{ secrets.USERNAME }}/.bashrc
+          if ! grep -q "export BASE_DOMAIN==${{ github.event.inputs.base_domain }}" /home/${{ secrets.USERNAME }}/.bashrc; then
+            echo "export BASE_DOMAIN=${{ github.event.inputs.base_domain }}" >> /home/${{ secrets.USERNAME }}/.bashrc
           fi
-          if ! grep -q "export CLUSTER_NAME=${{ secrets.CLUSTER_NAME }}" /home/${{ secrets.USERNAME }}/.bashrc; then
-            echo "export CLUSTER_NAME=${{ secrets.CLUSTER_NAME }}" >> /home/${{ secrets.USERNAME }}/.bashrc
+          if ! grep -q "export CLUSTER_NAME=${{ github.event.inputs.cluster_name }}" /home/${{ secrets.USERNAME }}/.bashrc; then
+            echo "export CLUSTER_NAME=${{ github.event.inputs.cluster_name }}" >> /home/${{ secrets.USERNAME }}/.bashrc
           fi
           if ! grep -q "export PULL_SECRET_FILE=${{ github.event.inputs.pull_secret_file }}" /home/${{ secrets.USERNAME }}/.bashrc; then
             echo "export PULL_SECRET_FILE=${{ github.event.inputs.pull_secret_file }}" >> /home/${{ secrets.USERNAME }}/.bashrc
