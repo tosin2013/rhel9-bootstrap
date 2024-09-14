@@ -29,6 +29,8 @@ sudo dnf -y install \
   containernetworking-plugins \
   iputils \
   iproute \
+  nmstate \
+  ansible-core \
   tmux
 
 sudo dnf -y groupinstall "Development Tools"
