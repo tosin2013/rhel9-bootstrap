@@ -83,7 +83,6 @@ fi
 # - Pip modules
 if ! command -v ansible-navigator &> /dev/null; then
     echo "ansible-navigator not found. Installing..."
-    sudo subscription-manager repos --list | grep ansible-automation-platform-2.4-for-rhel-9-x86_64-rpms || exit $?
     if ! sudo subscription-manager repos --enable=ansible-automation-platform-2.4-for-rhel-9-x86_64-rpms &> /dev/null; then
         echo "subscription-manager command not found. Installing ansible-navigator using pip..."
         sudo dnf install -y python3-pip
