@@ -32,8 +32,8 @@ jobs:
     - name: SSH into RHEL9 Bastion and Deploy OpenShift
       uses: appleboy/ssh-action@v0.1.10
       with:
-        host: ${{ secrets.BASTION_HOST }}
-        username: ${{ secrets.BASTION_USERNAME }}
+        host: ${{ env.HOSTNAME }}
+        username: ${{ env.USERNAME }}
         key: ${{ secrets.BASTION_KEY }}
         port: ${{ secrets.BASTION_PORT }}
         command_timeout: 60m
