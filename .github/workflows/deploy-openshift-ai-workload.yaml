@@ -76,7 +76,7 @@ jobs:
           if ! grep -q "export AWS_REGION=" /home/${{ secrets.USERNAME }}/.bashrc; then
             echo "export AWS_REGION=${{ secrets.AWS_REGION }}" >> /home/${{ secrets.USERNAME }}/.bashrc
           fi
-          if ! grep -q "export BASE_DOMAIN==${{ github.event.inputs.base_domain }}" /home/${{ secrets.USERNAME }}/.bashrc; then
+          if ! grep -q "export BASE_DOMAIN=${{ github.event.inputs.base_domain }}" /home/${{ secrets.USERNAME }}/.bashrc; then
             echo "export BASE_DOMAIN=${{ github.event.inputs.base_domain }}" >> /home/${{ secrets.USERNAME }}/.bashrc
           fi
           if ! grep -q "export CLUSTER_NAME=${{ github.event.inputs.cluster_name }}" /home/${{ secrets.USERNAME }}/.bashrc; then
