@@ -77,5 +77,9 @@ jobs:
           if ! grep -q "export CLUSTER_NAME=${{ secrets.CLUSTER_NAME }}" /home/${{ secrets.USERNAME }}/.bashrc; then
             echo "export CLUSTER_NAME=${{ secrets.CLUSTER_NAME }}" >> /home/${{ secrets.USERNAME }}/.bashrc
           fi
+          if ! grep -q "export PULL_SECRET_FILE=${{ github.event.inputs.pull_secret_file }}" /home/${{ secrets.USERNAME }}/.bashrc; then
+            echo "export PULL_SECRET_FILE=${{ github.event.inputs.pull_secret_file }}" >> /home/${{ secrets.USERNAME }}/.bashrc
+          fi
+
           source /home/${{ secrets.USERNAME }}/.bashrc
           sudo -E ./scripts/openshift-ai-workload.sh ${{ github.event.inputs.instance_size }} ${{ github.event.inputs.region }} ${{ github.event.inputs.destroy == 'true' && '--destroy' || '' }} ${{ github.event.inputs.pull_secret_file }}
