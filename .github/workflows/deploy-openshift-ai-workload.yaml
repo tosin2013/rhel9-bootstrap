@@ -56,8 +56,8 @@ jobs:
             git clone https://github.com/tosin2013/rhel9-bootstrap.git
           fi
           cd /opt/rhel9-bootstrap
-          echo "export aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" >> /home/${{ secrets.USERNAME }}/.bashrc
-          echo "export aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> /home/${{ secrets.USERNAME }}/.bashrc
-          echo "export aws_region=${{ secrets.AWS_REGION }}" >> /home/${{ secrets.USERNAME }}/.bashrc
+          echo "export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> /home/${{ secrets.USERNAME }}/.bashrc
+          echo "export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> /home/${{ secrets.USERNAME }}/.bashrc
+          echo "export AWS_REGION=${{ secrets.AWS_REGION }}" >> /home/${{ secrets.USERNAME }}/.bashrc
           source /home/${{ secrets.USERNAME }}/.bashrc
           sudo ./scripts/openshift-ai-workload.sh ${{ github.event.inputs.instance_size }} ${{ github.event.inputs.region }} ${{ github.event.inputs.destroy == 'true' && '--destroy' || '' }}
