@@ -6,14 +6,20 @@ region=${2:-us-east-2}
 aws_access_key_id=${AWS_ACCESS_KEY_ID}
 aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}
 aws_region=${AWS_REGION}
-base_domain=${BASE_DOMAIN}
-cluster_name=${CLUSTER_NAME}
+base_domain=${BASE_DOMAIN:-example.com}
+cluster_name=${CLUSTER_NAME:-test-cluster}
+pull_secret_file=${PULL_SECRET_FILE}
 
 print_aws_variables() {
     echo "Export the following AWS variables before running this script:"
     echo "export AWS_ACCESS_KEY_ID=\"YOUR_ACCESS_KEY_ID\""
     echo "export AWS_SECRET_ACCESS_KEY=\"YOUR_SECRET_ACCESS_KEY\""
     echo "export AWS_REGION=\"YOUR_AWS_REGION\""
+}
+
+print_pull_secret_variable() {
+    echo "Export the following variable before running this script:"
+    echo "export PULL_SECRET_FILE=\"/path/to/your/pull-secret.json\""
 }
 
 # Check if AWS credentials are set
@@ -34,6 +40,19 @@ if [ -z ${aws_region} ]; then
     print_aws_variables
     exit 1
 fi
+
+# Check if Pull Secret is provided
+if [ -z ${pull_secret_file} ]; then
+    echo "PULL_SECRET_FILE is not set"
+    print_pull_secret_variable
+    exit 1
+elif [ ! -f ${pull_secret_file} ]; then
+    echo "PULL_SECRET_FILE does not point to a valid file"
+    exit 1
+fi
+
+# Read the pull secret content
+pull_secret=$(cat ${pull_secret_file})
 
 # Check if 'yq' is installed
 if ! yq -v &> /dev/null; then
@@ -88,8 +107,8 @@ metadata:
 platform:
   aws:
     region: ${region}
-pullSecret: '{"auths":{"fake":{"auth":"bar"}}}' # replace with actual pull secret
-sshKey: '$(cat /home/$USER/.ssh/cluster-key.pub)' # replace with actual SSH key
+pullSecret: '${pull_secret}'
+sshKey: '$(cat /home/$USER/.ssh/cluster-key.pub)'
 EOF
 
 # Create the cluster with standard workers
