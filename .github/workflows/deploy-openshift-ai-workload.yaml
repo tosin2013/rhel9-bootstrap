@@ -19,6 +19,14 @@ on:
         description: 'hostname'
         required: true
         default: hostname
+      cluster_name:
+        description: 'Cluster name'
+        required: true
+        default: 'test-cluster'
+      base_domain:
+        description: 'Base domain'
+        required: true
+        default: 'example.com'
 
 jobs:
   deploy:
@@ -32,6 +40,8 @@ jobs:
         echo "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
         echo "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
         echo "aws_region=${{ secrets.AWS_REGION }}" >> $GITHUB_ENV
+        echo "cluster_name=${{ github.event.inputs.cluster_name }}" >> $GITHUB_ENV
+        echo "base_domain=${{ github.event.inputs.base_domain }}" >> $GITHUB_ENV
 
     - name: SSH into RHEL9 Bastion and Deploy OpenShift
       uses: appleboy/ssh-action@v0.1.10
