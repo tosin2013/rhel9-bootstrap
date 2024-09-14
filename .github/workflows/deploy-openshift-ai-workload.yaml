@@ -7,10 +7,6 @@ on:
         description: 'Instance size (e.g., m6i.2xlarge)'
         required: true
         default: 'm6i.2xlarge'
-      region:
-        description: 'AWS region (e.g., us-east-2)'
-        required: true
-        default: 'us-east-2'
       destroy:
         description: 'Destroy the cluster after deployment'
         required: false
@@ -71,10 +67,10 @@ jobs:
           if ! grep -q "export AWS_REGION=" /home/${{ secrets.USERNAME }}/.bashrc; then
             echo "export AWS_REGION=${{ secrets.AWS_REGION }}" >> /home/${{ secrets.USERNAME }}/.bashrc
           fi
-          if ! grep -q "export BASE_DOMAIN=" /home/${{ secrets.USERNAME }}/.bashrc; then
+          if ! grep -q "export BASE_DOMAIN=${{ secrets.BASE_DOMAIN }}" /home/${{ secrets.USERNAME }}/.bashrc; then
             echo "export BASE_DOMAIN=${{ secrets.BASE_DOMAIN }}" >> /home/${{ secrets.USERNAME }}/.bashrc
           fi
-          if ! grep -q "export CLUSTER_NAME=" /home/${{ secrets.USERNAME }}/.bashrc; then
+          if ! grep -q "export CLUSTER_NAME=${{ secrets.CLUSTER_NAME }}" /home/${{ secrets.USERNAME }}/.bashrc; then
             echo "export CLUSTER_NAME=${{ secrets.CLUSTER_NAME }}" >> /home/${{ secrets.USERNAME }}/.bashrc
           fi
           source /home/${{ secrets.USERNAME }}/.bashrc
