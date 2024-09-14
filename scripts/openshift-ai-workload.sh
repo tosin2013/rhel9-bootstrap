@@ -108,10 +108,17 @@ jq '.metadata.name = "gpu-workers" |
 echo "Applying the new GPU MachineSet..."
 oc apply -f gpu-machineset.json
 
-# Flag for destroying the cluster and deleting the $HOME/cluster folder
+# Check if the --destroy flag is passed
 if [ "$3" == "--destroy" ]; then
   echo "Destroying the cluster and deleting the $HOME/cluster folder..."
   openshift-install destroy cluster --dir=$HOME/cluster --log-level debug
   rm -rf $HOME/cluster
   exit 0
+fi
+
+# Check if instance size and region are provided
+if [ -z "$1" ] || [ -z "$2" ]; then
+  echo "Instance size or region not provided. Please pass the instance size and AWS region as arguments."
+  echo "Example: ./openshift-ai-workload.sh m6i.2xlarge us-east-2"
+  exit 1
 fi
