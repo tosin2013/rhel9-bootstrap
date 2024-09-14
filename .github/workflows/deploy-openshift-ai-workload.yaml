@@ -15,6 +15,10 @@ on:
         description: 'Destroy the cluster after deployment'
         required: false
         default: 'false'
+      hostname:
+        description: 'hostname'
+        required: true
+        default: hostname
 
 jobs:
   deploy:
@@ -32,7 +36,7 @@ jobs:
     - name: SSH into RHEL9 Bastion and Deploy OpenShift
       uses: appleboy/ssh-action@v0.1.10
       with:
-        host: ${{ env.HOSTNAME }}
+        host: ${{ github.event.inputs.hostname }}
         username: ${{ env.USERNAME }}
         key: ${{ secrets.BASTION_KEY }}
         port: ${{ secrets.BASTION_PORT }}
