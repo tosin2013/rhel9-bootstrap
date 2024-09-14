@@ -52,4 +52,8 @@ jobs:
             git clone https://github.com/your-repo/openshift-ai-workload.git
           fi
           cd /opt/openshift-ai-workload
+          echo "export aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" >> /home/${{ secrets.BASTION_USERNAME }}/.bashrc
+          echo "export aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> /home/${{ secrets.BASTION_USERNAME }}/.bashrc
+          echo "export aws_region=${{ secrets.AWS_REGION }}" >> /home/${{ secrets.BASTION_USERNAME }}/.bashrc
+          source /home/${{ secrets.BASTION_USERNAME }}/.bashrc
           sudo ./scripts/openshift-ai-workload.sh ${{ github.event.inputs.instance_size }} ${{ github.event.inputs.region }} ${{ github.event.inputs.destroy == 'true' && '--destroy' || '' }}
