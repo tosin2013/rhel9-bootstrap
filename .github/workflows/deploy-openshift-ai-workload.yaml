@@ -29,14 +29,14 @@ jobs:
         echo "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
         echo "aws_region=${{ secrets.AWS_REGION }}" >> $GITHUB_ENV
 
-    - name: SSH into RHEL9 Bastion and Run Deployment Script
+    - name: SSH into RHEL9 Bastion and Deploy OpenShift
       uses: appleboy/ssh-action@v0.1.10
       with:
         host: ${{ secrets.BASTION_HOST }}
         username: ${{ secrets.BASTION_USERNAME }}
         key: ${{ secrets.BASTION_KEY }}
         port: ${{ secrets.BASTION_PORT }}
-        command_timeout: 30m
+        command_timeout: 60m
         script: |
           sudo yum install git -y
           if [ -d "/opt/openshift-ai-workload" ]; then
