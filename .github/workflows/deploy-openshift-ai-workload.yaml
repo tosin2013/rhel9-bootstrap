@@ -74,4 +74,4 @@ jobs:
             echo "export CLUSTER_NAME=${{ secrets.CLUSTER_NAME }}" >> /home/${{ secrets.USERNAME }}/.bashrc
           fi
           source /home/${{ secrets.USERNAME }}/.bashrc
-          sudo ./scripts/openshift-ai-workload.sh ${{ github.event.inputs.instance_size }} ${{ github.event.inputs.region }} ${{ github.event.inputs.destroy == 'true' && '--destroy' || '' }}
+          sudo -E ./scripts/openshift-ai-workload.sh ${{ github.event.inputs.instance_size }} ${{ github.event.inputs.region }} ${{ github.event.inputs.destroy == 'true' && '--destroy' || '' }}
