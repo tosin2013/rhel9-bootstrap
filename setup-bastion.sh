@@ -30,6 +30,7 @@ if [ -z $GUID ]; then
      read -p "Enter GUID: " GUID
 fi
 
+
 if [[ -s ~/.vault_password ]]; then
     echo "The file contains information."
 else
