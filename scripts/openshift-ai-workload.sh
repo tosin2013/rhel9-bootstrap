@@ -6,8 +6,8 @@ region=${2:-us-east-2}
 aws_access_key_id=${AWS_ACCESS_KEY_ID}
 aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}
 aws_region=${AWS_REGION}
-base_domain=${BASE_DOMAIN:-example.com}
-cluster_name=${CLUSTER_NAME:-test-cluster}
+base_domain=${BASE_DOMAIN}
+cluster_name=${CLUSTER_NAME}
 
 print_aws_variables() {
     echo "Export the following AWS variables before running this script:"
