@@ -1,0 +1,35 @@
+name: Deploy OpenShift AI Workload
+
+on:
+  workflow_dispatch:
+    inputs:
+      instance_size:
+        description: 'Instance size (e.g., m6i.2xlarge)'
+        required: true
+        default: 'm6i.2xlarge'
+      region:
+        description: 'AWS region (e.g., us-east-2)'
+        required: true
+        default: 'us-east-2'
+      destroy:
+        description: 'Destroy the cluster after deployment'
+        required: false
+        default: 'false'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up AWS credentials
+      run: |
+        echo "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+        echo "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+        echo "aws_region=${{ secrets.AWS_REGION }}" >> $GITHUB_ENV
+
+    - name: Run OpenShift AI Workload script
+      run: |
+        chmod +x ./scripts/openshift-ai-workload.sh
+        ./scripts/openshift-ai-workload.sh ${{ github.event.inputs.instance_size }} ${{ github.event.inputs.region }} ${{ github.event.inputs.destroy == 'true' && '--destroy' || '' }}
