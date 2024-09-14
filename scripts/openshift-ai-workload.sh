@@ -1,5 +1,6 @@
 #!/bin/bash
 
+source ~/.bashrc
 instance_size=${1:-m6i.2xlarge}
 region=${2:-us-east-2}
 
