@@ -16,6 +16,7 @@ sudo dnf -y install \
   nano \
   vim \
   unzip \
+  ansible-core \
   bind-utils \
   tar \
   util-linux-user \
@@ -29,8 +30,8 @@ sudo dnf -y install \
   containernetworking-plugins \
   iputils \
   iproute \
-  nmstate \
-  ansible-core \
+  runc \
+  python3-pip \
   tmux
 
 sudo dnf -y groupinstall "Development Tools"
