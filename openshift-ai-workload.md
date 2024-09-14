@@ -24,8 +24,8 @@ This document explains how to trigger the `openshift-ai-workload.sh` script in a
 
 1. Clone the repository to your RHEL9 server:
    ```bash
-   git clone https://github.com/your-repo/your-repo.git
-   cd your-repo
+   git clone https://github.com/tosin2013/rhel9-bootstrap.git
+   cd rhel9-bootstrap
    ```
 
 2. Run the `openshift-ai-workload.sh` script with the required parameters:
