@@ -47,7 +47,7 @@ jobs:
       uses: appleboy/ssh-action@v0.1.10
       with:
         host: ${{ github.event.inputs.hostname }}
-        username: ${{ env.USERNAME }}
+        username: ${{ secrets.USERNAME }}
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
         command_timeout: 60m
