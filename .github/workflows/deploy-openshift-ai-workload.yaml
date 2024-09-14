@@ -87,4 +87,4 @@ jobs:
           fi
 
           source /home/${{ secrets.USERNAME }}/.bashrc
-          sudo -E ./scripts/openshift-ai-workload.sh ${{ github.event.inputs.instance_size }} ${{ github.event.inputs.region }} ${{ github.event.inputs.destroy == 'true' && '--destroy' || '' }} ${{ github.event.inputs.pull_secret_file }}
+          sudo -E ./scripts/openshift-ai-workload.sh ${{ github.event.inputs.instance_size }} ${{ github.event.inputs.region }} ${{ github.event.inputs.destroy == 'true' && '--destroy' || '' }} 
