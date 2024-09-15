@@ -13,11 +13,14 @@ This document explains how to trigger the `openshift-ai-workload.sh` script in a
    - `yq` (YAML processor)
    - `openshift-install` (OpenShift installer)
 
-2. Set the required AWS credentials as environment variables:
+2. Set the required environment variables:
    ```bash
-   export aws_access_key_id="YOUR_ACCESS_KEY_ID"
-   export aws_secret_access_key="YOUR_SECRET_ACCESS_KEY"
-   export aws_region="YOUR_AWS_REGION"
+   export AWS_ACCESS_KEY_ID="YOUR_ACCESS_KEY_ID"
+   export AWS_SECRET_ACCESS_KEY="YOUR_SECRET_ACCESS_KEY"
+   export AWS_REGION="YOUR_AWS_REGION"
+   export BASE_DOMAIN="YOUR_BASE_DOMAIN"
+   export CLUSTER_NAME="YOUR_CLUSTER_NAME"
+   export PULL_SECRET_FILE="/path/to/your/pull-secret.json"
    ```
 
 ### Running the Script
@@ -49,7 +52,12 @@ This document explains how to trigger the `openshift-ai-workload.sh` script in a
 
 ### Workflow Configuration
 
-The GitHub Actions workflow is configured in `.github/workflows/deploy-openshift-ai-workload.yaml`. The workflow is triggered on a push to the `main` branch or manually via the GitHub Actions UI.
+The GitHub Actions workflow is configured in `.github/workflows/deploy-openshift-ai-workload.yaml`. The workflow is triggered on a push to the `main` branch or manually via the GitHub Actions UI. The workflow accepts the following inputs:
+- `instance_size`: The instance size (e.g., `m6i.2xlarge`).
+- `pull_secret_file`: The path to the pull secret file.
+- `destroy`: Whether to destroy the cluster after deployment.
+- `cluster_name`: The name of the cluster.
+- `base_domain`: The base domain for the cluster.
 
 ### Secrets Configuration
 
@@ -69,7 +77,12 @@ To configure the secrets in your GitHub repository:
 2. Alternatively, you can manually trigger the workflow from the GitHub Actions UI:
    - Go to the `Actions` tab in your repository.
    - Select the `Deploy OpenShift AI Workload` workflow.
-   - Click on `Run workflow` and provide the required inputs (instance size and region).
+   - Click on `Run workflow` and provide the required inputs:
+     - `instance_size`: The instance size (e.g., `m6i.2xlarge`).
+     - `pull_secret_file`: The path to the pull secret file.
+     - `destroy`: Whether to destroy the cluster after deployment.
+     - `cluster_name`: The name of the cluster.
+     - `base_domain`: The base domain for the cluster.
 
 ## Conclusion
 

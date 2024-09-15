@@ -31,6 +31,7 @@ sudo dnf -y install \
   iputils \
   iproute \
   runc \
+  jq \
   python3-pip \
   tmux
 
