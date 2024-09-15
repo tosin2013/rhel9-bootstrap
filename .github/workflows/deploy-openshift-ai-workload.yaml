@@ -90,7 +90,7 @@ jobs:
           echo "Deploying OpenShift AI Workload"
           echo "****************************************"
           sudo -E ./scripts/openshift-ai-workload.sh ${{ github.event.inputs.instance_size }} ${{ secrets.AWS_REGION  }} ${{ github.event.inputs.destroy == 'true' && '--destroy' || '' }} 
-          if [${{ github.event.inputs.destroy != 'true' }}]; then
+          if [ ${{ github.event.inputs.destroy != 'true' }} ]; then
             echo "Configure Certificates on OpenShift"
             echo "****************************************"
             export KUBECONFIG=/root/cluster/auth/kubeconfig
