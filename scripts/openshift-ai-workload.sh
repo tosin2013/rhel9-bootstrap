@@ -121,8 +121,8 @@ sleep 300  # Wait for 5 minutes
 
 # Login to OpenShift
 echo "Logging in to OpenShift..."
-export KUBECONFIG=/home/$USER/cluster/auth/kubeconfig
-oc whoami
+export KUBECONFIG=/root/cluster/auth/kubeconfig
+oc whoami || exit $?
 
 # Copy an existing MachineSet
 echo "Copying an existing MachineSet..."
