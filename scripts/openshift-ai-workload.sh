@@ -82,8 +82,9 @@ else
   echo "SSH key '/home/$USER/.ssh/cluster-key' already exists. Skipping key generation."
 fi
 
-# Create install-config.yaml for m6i.2xlarge workers
-mkdir -p $HOME/cluster
+if [ "$3" != "--destroy" ]; then
+  # Create install-config.yaml for m6i.2xlarge workers
+  mkdir -p $HOME/cluster
 cat <<EOF > $HOME/cluster/install-config.yaml
 apiVersion: v1
 baseDomain: ${base_domain}
@@ -112,31 +113,32 @@ pullSecret: '${pull_secret}'
 sshKey: '$(cat /home/$USER/.ssh/cluster-key.pub)'
 EOF
 
-# Create the cluster with standard workers
-yes | openshift-install create cluster --dir=$HOME/cluster --log-level debug
+  # Create the cluster with standard workers
+  yes | openshift-install create cluster --dir=$HOME/cluster --log-level debug
 
-# Sleep to ensure the cluster is stable
-echo "Waiting for the cluster to stabilize..."
-sleep 300  # Wait for 5 minutes
+  # Sleep to ensure the cluster is stable
+  echo "Waiting for the cluster to stabilize..."
+  sleep 300  # Wait for 5 minutes
 
-# Login to OpenShift
-echo "Logging in to OpenShift..."
-export KUBECONFIG=/root/cluster/auth/kubeconfig
-oc whoami || exit $?
+  # Login to OpenShift
+  echo "Logging in to OpenShift..."
+  export KUBECONFIG=/root/cluster/auth/kubeconfig
+  oc whoami || exit $?
 
-# Copy an existing MachineSet
-echo "Copying an existing MachineSet..."
-oc get machineset -n openshift-machine-api -o json | jq '.items[0]' > original-machineset.json
+  # Copy an existing MachineSet
+  echo "Copying an existing MachineSet..."
+  oc get machineset -n openshift-machine-api -o json | jq '.items[0]' > original-machineset.json
 
-# Modify the copied MachineSet for GPU nodes (p2.xlarge)
-echo "Modifying the copied MachineSet for GPU nodes..."
-jq '.metadata.name = "gpu-workers" |
-    .spec.replicas = 2 |
-    .spec.template.spec.providerSpec.value.instanceType = "p2.xlarge"' original-machineset.json > gpu-machineset.json
+  # Modify the copied MachineSet for GPU nodes (p2.xlarge)
+  echo "Modifying the copied MachineSet for GPU nodes..."
+  jq '.metadata.name = "gpu-workers" |
+      .spec.replicas = 2 |
+      .spec.template.spec.providerSpec.value.instanceType = "p2.xlarge"' original-machineset.json > gpu-machineset.json
 
-# Apply the new GPU MachineSet
-echo "Applying the new GPU MachineSet..."
-oc apply -f gpu-machineset.json
+  # Apply the new GPU MachineSet
+  echo "Applying the new GPU MachineSet..."
+  oc apply -f gpu-machineset.json
+fi 
 
 # Check if the --destroy flag is passed
 if [ "$3" == "--destroy" ]; then
