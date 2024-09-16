@@ -49,6 +49,7 @@ This document explains how to trigger the `openshift-ai-workload.sh` script in a
    - `AWS_ACCESS_KEY_ID`
    - `AWS_SECRET_ACCESS_KEY`
    - `AWS_REGION`
+   - `EMAIL`
 
 ### Workflow Configuration
 
