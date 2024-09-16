@@ -13,8 +13,12 @@ on:
         default: '/home/lab-user/pull-secret.json'
       destroy:
         description: 'Destroy the cluster after deployment'
-        required: false
-        default: 'false'
+        required: true
+        type: choice
+        default: false
+        options:
+            - true
+            - false
       hostname:
         description: 'hostname'
         required: true
@@ -89,8 +93,9 @@ jobs:
           source /home/${{ secrets.USERNAME }}/.bashrc
           echo "Deploying OpenShift AI Workload"
           echo "****************************************"
-          sudo -E ./scripts/openshift-ai-workload.sh ${{ github.event.inputs.instance_size }} ${{ secrets.AWS_REGION  }} ${{ github.event.inputs.destroy == 'true' && '--destroy' || '' }} 
-          if [ ${{ github.event.inputs.destroy != 'true' }} ]; then
+           
+          if [ ${{ github.event.inputs.destroy == 'false' }} ]; then
+            sudo -E ./scripts/openshift-ai-workload.sh ${{ github.event.inputs.instance_size }} ${{ secrets.AWS_REGION  }} ${{ github.event.inputs.destroy == 'true' && '--destroy' || '' }}
             echo "Configure Certificates on OpenShift"
             echo "****************************************"
             export KUBECONFIG=/root/cluster/auth/kubeconfig
@@ -98,4 +103,7 @@ jobs:
             chmod +x configure-keys-on-openshift.sh
             sudo -E ./configure-keys-on-openshift.sh ${{ secrets.AWS_ACCESS_KEY_ID }} ${{ secrets.AWS_SECRET_ACCESS_KEY }} podman
           fi
+          if [ ${{ github.event.inputs.destroy == 'true'}} ]; then
+            sudo -E ./scripts/openshift-ai-workload.sh ${{ github.event.inputs.instance_size }} ${{ secrets.AWS_REGION  }} --destroy
+          fi 
 
