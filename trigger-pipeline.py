@@ -1,15 +1,46 @@
 import requests
 import os
 
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives import hashes
+import base64
+
+def get_public_key(repo_owner, repo_name, token):
+    url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/actions/secrets/public-key"
+    headers = {
+        "Authorization": f"token {token}",
+        "Accept": "application/vnd.github.v3+json",
+    }
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        raise Exception(f"Failed to fetch public key: {response.status_code} - {response.text}")
+
+def encrypt_secret(public_key_info, secret_value):
+    public_key = serialization.load_pem_public_key(public_key_info['key'].encode())
+    encrypted_value = public_key.encrypt(
+        secret_value.encode(),
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
+            algorithm=hashes.SHA256(),
+            label=None
+        )
+    )
+    return base64.b64encode(encrypted_value).decode()
+
 def update_secret(repo_owner, repo_name, token, secret_name, secret_value):
+    public_key_info = get_public_key(repo_owner, repo_name, token)
+    encrypted_value = encrypt_secret(public_key_info, secret_value)
     url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/actions/secrets/{secret_name}"
     headers = {
         "Authorization": f"token {token}",
         "Accept": "application/vnd.github.v3+json",
     }
     data = {
-        "encrypted_value": secret_value,
-        "key_id": "your-key-id"  # This should be replaced with the actual key ID
+        "encrypted_value": encrypted_value,
+        "key_id": public_key_info['key_id']
     }
     response = requests.put(url, json=data, headers=headers)
     if response.status_code == 204:
