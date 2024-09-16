@@ -33,23 +33,35 @@ def trigger_workflow(repo_owner, repo_name, workflow_id, token, inputs):
     else:
         print(f"Failed to trigger workflow: {response.status_code} - {response.text}")
 
+import argparse
+
 if __name__ == "__main__":
-    repo_owner = "your-github-username"
-    repo_name = "your-repo-name"
-    workflow_id = "deploy-openshift-ai-workload.yaml"
+    parser = argparse.ArgumentParser(description="Trigger GitHub workflow and update AWS secrets.")
+    parser.add_argument("--repo-owner", required=True, help="GitHub repository owner")
+    parser.add_argument("--repo-name", required=True, help="GitHub repository name")
+    parser.add_argument("--workflow-id", default="deploy-openshift-ai-workload.yaml", help="GitHub workflow ID")
+    parser.add_argument("--instance-size", default="m6i.2xlarge", help="Instance size")
+    parser.add_argument("--pull-secret-file", default="/home/lab-user/pull-secret.json", help="Path to the pull secret file")
+    parser.add_argument("--destroy", default="false", help="Destroy the cluster after deployment")
+    parser.add_argument("--hostname", required=True, help="Hostname")
+    parser.add_argument("--cluster-name", default="test-cluster", help="Cluster name")
+    parser.add_argument("--base-domain", default="example.com", help="Base domain")
+
+    args = parser.parse_args()
+
     token = os.getenv("GITHUB_TOKEN")
     inputs = {
-        "instance_size": "m6i.2xlarge",
-        "pull_secret_file": "/home/lab-user/pull-secret.json",
-        "destroy": "false",
-        "hostname": "your-hostname",
-        "cluster_name": "test-cluster",
-        "base_domain": "example.com"
+        "instance_size": args.instance_size,
+        "pull_secret_file": args.pull_secret_file,
+        "destroy": args.destroy,
+        "hostname": args.hostname,
+        "cluster_name": args.cluster_name,
+        "base_domain": args.base_domain
     }
 
     # Update AWS secrets
-    update_secret(repo_owner, repo_name, token, "AWS_ACCESS_KEY_ID", os.getenv("NEW_AWS_ACCESS_KEY_ID"))
-    update_secret(repo_owner, repo_name, token, "AWS_SECRET_ACCESS_KEY", os.getenv("NEW_AWS_SECRET_ACCESS_KEY"))
+    update_secret(args.repo_owner, args.repo_name, token, "AWS_ACCESS_KEY_ID", os.getenv("NEW_AWS_ACCESS_KEY_ID"))
+    update_secret(args.repo_owner, args.repo_name, token, "AWS_SECRET_ACCESS_KEY", os.getenv("NEW_AWS_SECRET_ACCESS_KEY"))
 
     # Trigger the workflow
-    trigger_workflow(repo_owner, repo_name, workflow_id, token, inputs)
+    trigger_workflow(args.repo_owner, args.repo_name, args.workflow_id, token, inputs)
