@@ -67,24 +67,23 @@ jobs:
             git clone https://github.com/tosin2013/rhel9-bootstrap.git
           fi
           cd /opt/rhel9-bootstrap
-          if ! grep -q "export AWS_SECRET_ACCESS_KEY=" /home/${{ secrets.USERNAME }}/.bashrc; then
-            echo "export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> /home/${{ secrets.USERNAME }}/.bashrc
-          fi
-          if ! grep -q "export AWS_ACCESS_KEY_ID=" /home/${{ secrets.USERNAME }}/.bashrc; then
-            echo "export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> /home/${{ secrets.USERNAME }}/.bashrc
-          fi
-          if ! grep -q "export AWS_REGION=" /home/${{ secrets.USERNAME }}/.bashrc; then
-            echo "export AWS_REGION=${{ secrets.AWS_REGION }}" >> /home/${{ secrets.USERNAME }}/.bashrc
-          fi
-          if ! grep -q "export BASE_DOMAIN=${{ github.event.inputs.base_domain }}" /home/${{ secrets.USERNAME }}/.bashrc; then
-            echo "export BASE_DOMAIN=${{ github.event.inputs.base_domain }}" >> /home/${{ secrets.USERNAME }}/.bashrc
-          fi
-          if ! grep -q "export CLUSTER_NAME=${{ github.event.inputs.cluster_name }}" /home/${{ secrets.USERNAME }}/.bashrc; then
-            echo "export CLUSTER_NAME=${{ github.event.inputs.cluster_name }}" >> /home/${{ secrets.USERNAME }}/.bashrc
-          fi
-          if ! grep -q "export PULL_SECRET_FILE=${{ github.event.inputs.pull_secret_file }}" /home/${{ secrets.USERNAME }}/.bashrc; then
-            echo "export PULL_SECRET_FILE=${{ github.event.inputs.pull_secret_file }}" >> /home/${{ secrets.USERNAME }}/.bashrc
-          fi
+          sed -i '/export AWS_SECRET_ACCESS_KEY=/d' /home/${{ secrets.USERNAME }}/.bashrc
+          echo "export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> /home/${{ secrets.USERNAME }}/.bashrc
+
+          sed -i '/export AWS_ACCESS_KEY_ID=/d' /home/${{ secrets.USERNAME }}/.bashrc
+          echo "export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> /home/${{ secrets.USERNAME }}/.bashrc
+
+          sed -i '/export AWS_REGION=/d' /home/${{ secrets.USERNAME }}/.bashrc
+          echo "export AWS_REGION=${{ secrets.AWS_REGION }}" >> /home/${{ secrets.USERNAME }}/.bashrc
+
+          sed -i '/export BASE_DOMAIN=/d' /home/${{ secrets.USERNAME }}/.bashrc
+          echo "export BASE_DOMAIN=${{ github.event.inputs.base_domain }}" >> /home/${{ secrets.USERNAME }}/.bashrc
+
+          sed -i '/export CLUSTER_NAME=/d' /home/${{ secrets.USERNAME }}/.bashrc
+          echo "export CLUSTER_NAME=${{ github.event.inputs.cluster_name }}" >> /home/${{ secrets.USERNAME }}/.bashrc
+
+          sed -i '/export PULL_SECRET_FILE=/d' /home/${{ secrets.USERNAME }}/.bashrc
+          echo "export PULL_SECRET_FILE=${{ github.event.inputs.pull_secret_file }}" >> /home/${{ secrets.USERNAME }}/.bashrc
 
           source /home/${{ secrets.USERNAME }}/.bashrc
           echo "Deploying OpenShift AI Workload"
