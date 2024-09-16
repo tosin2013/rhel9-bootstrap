@@ -23,7 +23,7 @@ To use the script, run it with the required command-line arguments. The script w
 ### Example Command
 
 ```bash
-python trigger-pipeline.py --repo-owner your-github-username --repo-name your-repo-name --hostname your-hostname
+python3 trigger-pipeline.py --repo-owner your-github-username --repo-name your-repo-name --hostname your-hostname
 ```
 
 ## Environment Variables
