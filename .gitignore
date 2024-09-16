@@ -4,4 +4,4 @@ aider_setup.sh
 .aider*
 .env
 venv/
-quick-script.sh
+use-me.sh
