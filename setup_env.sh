@@ -7,7 +7,7 @@ python3 -m venv venv
 source venv/bin/activate
 
 # Install the required dependencies
-pip install requests cryptography
+pip install requests pynacl
 
 # Deactivate the virtual environment
 deactivate
