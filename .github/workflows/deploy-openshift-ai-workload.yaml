@@ -99,7 +99,7 @@ jobs:
             echo "Configure Certificates on OpenShift"
             echo "****************************************"
             export KUBECONFIG=/root/cluster/auth/kubeconfig
-            https://gist.githubusercontent.com/tosin2013/866522a1420ac22f477d2253121b4416/raw/2c25e809c424d6336e95007ddb944a4f32c6cad1/configure-keys-on-openshift.sh
+            curl -OL https://gist.githubusercontent.com/tosin2013/866522a1420ac22f477d2253121b4416/raw/2c25e809c424d6336e95007ddb944a4f32c6cad1/configure-keys-on-openshift.sh
             chmod +x configure-keys-on-openshift.sh
             sudo -E ./configure-keys-on-openshift.sh ${{ secrets.AWS_ACCESS_KEY_ID }} ${{ secrets.AWS_SECRET_ACCESS_KEY }} podman ${{ secrets.EMAIL }}
           fi
