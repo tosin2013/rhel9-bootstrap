@@ -5,3 +5,4 @@ aider_setup.sh
 .env
 venv/
 use-me.sh
+agnosticd.sh
