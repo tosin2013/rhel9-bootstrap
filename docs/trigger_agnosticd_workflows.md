@@ -14,10 +14,20 @@ This document explains how to trigger the GitHub workflow located at `.github/wo
 3. Run the script using the following command:
 
    ```bash
-   python3 trigger_agnosticd_workflows.py
+   python3 trigger_agnosticd_workflows.py --owner YOUR_GITHUB_OWNER --repo YOUR_GITHUB_REPO --token YOUR_GITHUB_TOKEN --hostname YOUR_HOSTNAME --agnosticd_workload ocp4_workload_redhat_developer_hub --agnosticd_action create --guid YOUR_GUID --openshift_user YOUR_OPENSHIFT_USER
    ```
 
-4. Ensure you have replaced `YOUR_GITHUB_TOKEN` in the script with your actual GitHub token.
+4. Replace the placeholders with your actual values:
+   - `YOUR_GITHUB_OWNER`: Your GitHub username or organization name.
+   - `YOUR_GITHUB_REPO`: The name of your GitHub repository.
+   - `YOUR_GITHUB_TOKEN`: Your GitHub personal access token.
+   - `YOUR_HOSTNAME`: The hostname for the workflow.
+   - `YOUR_GUID`: The GUID for the workflow.
+   - `YOUR_OPENSHIFT_USER`: The OpenShift user for the workflow.
+
+## Notes
+
+- The script triggers the workflow on the `main` branch by default. If you need to trigger it on a different branch, add the `--branch` option with the desired branch name.
 
 ## Notes
 
