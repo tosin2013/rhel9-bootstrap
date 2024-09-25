@@ -48,6 +48,12 @@ jobs:
         command_timeout: 30m
         script: | 
           sudo dnf install wget openssh-clients sshpass ansible-core openssl python3-jmespath -y
+          if [ -f "/root/cluster/auth/kubeconfig" ]; then
+            export KUBECONFIG=/root/cluster/auth/kubeconfig
+          else
+            echo "KUBECONFIG path does not exist. Exiting pipeline."
+            exit 1
+          fi
           if [ -d "$HOME/agnosticd" ]; then
             cd $HOME/agnosticd
             git pull
