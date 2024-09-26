@@ -67,34 +67,54 @@ jobs:
         echo "[all]" > /tmp/hosts 
         echo "control ansible_host=${{ inputs.hostname }} ansible_connection=ssh ansible_user=${{ secrets.USERNAME }} ansible_ssh_private_key_file=~/.ssh/github-actions" >> /tmp/hosts
 
+    - name: Copy extra_vars.yml to target system
+      uses: appleboy/scp-action@v0.1.10
+      with:
+        host: ${{ env.HOSTNAME }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: ${{ secrets.PORT }}
+        source: "agnosticd_templates/ocp-workloads/${{ inputs.agnosticd_workload }}.yaml"
+        target: "/extra_vars.yml"
+
     - name: Run Ansible Playbook for Create
       if: ${{ inputs.agnosticd_action == 'create' }}
-      run: |
-        export KUBECONFIG=${{ inputs.kubeconfig_path }}
-        ansible-playbook -i /tmp/hosts $HOME/agnosticd/ansible/configs/ocp-workloads/main.yml \
-          -e "ansible_user=${{ secrets.USERNAME }}" \
-          -e "ocp_username=${{ inputs.openshift_user }}" \
-          -e "ansible_password=${{ secrets.ANSIBLE_PASSWORD }}" \
-          -e "ocp_workload=${{ inputs.agnosticd_workload }}" \
-          -e "silent=False" \
-          -e "guid=${{ inputs.guid }}" \
-          -e "ACTION=${{ inputs.agnosticd_action }}" \
-          -e "@/extra_vars.yml"
-      env:
-        ANSIBLE_PASSWORD: ${{ secrets.ANSIBLE_PASSWORD }}
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ env.HOSTNAME }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: ${{ secrets.PORT }}
+        command_timeout: 30m
+        script: |
+          export KUBECONFIG=${{ inputs.kubeconfig_path }}
+          ansible-playbook -i /tmp/hosts $HOME/agnosticd/ansible/configs/ocp-workloads/main.yml \
+            -e "ansible_user=${{ secrets.USERNAME }}" \
+            -e "ocp_username=${{ inputs.openshift_user }}" \
+            -e "ansible_password=${{ secrets.ANSIBLE_PASSWORD }}" \
+            -e "ocp_workload=${{ inputs.agnosticd_workload }}" \
+            -e "silent=False" \
+            -e "guid=${{ inputs.guid }}" \
+            -e "ACTION=${{ inputs.agnosticd_action }}" \
+            -e "@/extra_vars.yml"
 
     - name: Run Ansible Playbook for Delete
       if: ${{ inputs.agnosticd_action == 'remove' }}
-      run: |
-        export KUBECONFIG=${{ inputs.kubeconfig_path }}
-        ansible-playbook -i /tmp/hosts $HOME/agnosticd/ansible/configs/ocp-workloads/destroy.yml \
-          -e "ansible_user=${{ secrets.USERNAME }}" \
-          -e "ocp_username=${{ inputs.openshift_user }}" \
-          -e "ansible_password=${{ secrets.ANSIBLE_PASSWORD }}" \
-          -e "ocp_workload=${{ inputs.agnosticd_workload }}" \
-          -e "silent=False" \
-          -e "guid=${{ inputs.guid }}" \
-          -e "ACTION=destroy" \
-          -e "@/extra_vars.yml"
-      env:
-        ANSIBLE_PASSWORD: ${{ secrets.ANSIBLE_PASSWORD }}
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ env.HOSTNAME }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: ${{ secrets.PORT }}
+        command_timeout: 30m
+        script: |
+          export KUBECONFIG=${{ inputs.kubeconfig_path }}
+          ansible-playbook -i /tmp/hosts $HOME/agnosticd/ansible/configs/ocp-workloads/destroy.yml \
+            -e "ansible_user=${{ secrets.USERNAME }}" \
+            -e "ocp_username=${{ inputs.openshift_user }}" \
+            -e "ansible_password=${{ secrets.ANSIBLE_PASSWORD }}" \
+            -e "ocp_workload=${{ inputs.agnosticd_workload }}" \
+            -e "silent=False" \
+            -e "guid=${{ inputs.guid }}" \
+            -e "ACTION=destroy" \
+            -e "@/extra_vars.yml"

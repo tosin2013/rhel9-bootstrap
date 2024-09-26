@@ -3,8 +3,8 @@
 cloud_provider: none
 env_type: ocp-workloads
 
-ocp_username: CHANGEME
-guid: CHANGEME
+ocp_username: ${{ inputs.openshift_user }}
+guid: ${{ inputs.guid }}
 
 ocp_workloads:
   - ocp4_workload_redhat_developer_hub
