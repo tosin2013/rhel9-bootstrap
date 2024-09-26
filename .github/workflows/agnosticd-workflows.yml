@@ -96,6 +96,7 @@ jobs:
         command_timeout: 30m
         script: |
           export KUBECONFIG=${{ inputs.kubeconfig_path }}
+          cd $HOME/agnosticd
           ansible-navigator run ansible/main.yml \
             --eei quay.io/agnosticd/ee-multicloud:latest \
             -e @ansible/configs/${{ inputs.agnosticd_workload }}.yaml  -m stdout
@@ -111,6 +112,7 @@ jobs:
         command_timeout: 30m
         script: |
           export KUBECONFIG=${{ inputs.kubeconfig_path }}
+          cd $HOME/agnosticd
           ansible-navigator run ansible/destroy.yml \
             --eei quay.io/agnosticd/ee-multicloud:latest \
             -e @ansible/configs/${{ inputs.agnosticd_workload }}.yaml  -m stdout
