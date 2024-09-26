@@ -1,7 +1,7 @@
 # https://github.com/redhat-cop/agnosticd/tree/development/ansible/roles_ocp_workloads/ocp4_workload_redhat_developer_hub
 ---
 cloud_provider: none
-guid: tosintest
+guid: CHANGEME
 env_type: ocp-workloads
 
 ocp_workloads_virtualenv_path: /opt/virtualenvs/k8s
