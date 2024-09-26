@@ -1,0 +1,14 @@
+---
+cloud_provider: none
+env_type: ocp-workloads
+
+ocp_username: CHANGEME
+guid: CHANGEME
+
+ocp_workloads:
+  - ocp-workload-gogs
+
+# workload-specific vars
+gogs_project: "{{ guid }}-gogs"
+
+target_host: localhost
