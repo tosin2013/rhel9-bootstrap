@@ -42,10 +42,14 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Install dependencies
-      run: |
-        sudo dnf install wget openssh-clients sshpass ansible-core openssl python3-jmespath -y
-        sudo pip3 install openshift pyyaml kubernetes jmespath
-        ansible-galaxy collection install kubernetes.core community.general
+      uses: appleboy/scp-action@v0.1.10
+      with:
+        host: ${{ env.HOSTNAME }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: ${{ secrets.PORT }}
+        source: "dependencies.tar.gz"
+        target: "/tmp/dependencies.tar.gz"
 
     - name: Clone or update AgnosticD repository
       run: |
