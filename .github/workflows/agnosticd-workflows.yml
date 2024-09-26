@@ -99,7 +99,7 @@ jobs:
           cd $HOME/agnosticd
           ansible-navigator run ansible/main.yml \
             --eei quay.io/agnosticd/ee-multicloud:latest \
-            -e @ansible/configs/${{ inputs.agnosticd_workload }}.yaml  -m stdout
+            -e @ansible/configs/${{ inputs.agnosticd_workload }}.yaml  -m stdout -vvv
 
     - name: Run Ansible Playbook for Delete
       if: ${{ inputs.agnosticd_action == 'remove' }}
