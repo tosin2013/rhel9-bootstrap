@@ -107,7 +107,7 @@ jobs:
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
         source: "agnosticd_templates/ocp-workloads/${{ inputs.agnosticd_workload }}.yaml"
-        target: "/extra_vars.yml"
+        target: "/tmp/extra_vars.yml"
 
     - name: Run Ansible Playbook for Create
       if: ${{ inputs.agnosticd_action == 'create' }}
@@ -128,7 +128,7 @@ jobs:
             -e "silent=False" \
             -e "guid=${{ inputs.guid }}" \
             -e "ACTION=${{ inputs.agnosticd_action }}" \
-            -e "@/extra_vars.yml"
+            -e "@/tmp/extra_vars.yml"
 
     - name: Run Ansible Playbook for Delete
       if: ${{ inputs.agnosticd_action == 'remove' }}
@@ -149,4 +149,4 @@ jobs:
             -e "silent=False" \
             -e "guid=${{ inputs.guid }}" \
             -e "ACTION=destroy" \
-            -e "@/extra_vars.yml"
+            -e "@/tmp/extra_vars.yml"
