@@ -57,6 +57,7 @@ jobs:
           sudo dnf install wget openssh-clients sshpass ansible-core openssl python3-jmespath -y
           sudo pip3 install openshift pyyaml kubernetes jmespath
           ansible-galaxy collection install kubernetes.core community.general
+          pip3 install 'ansible-navigator[ansible-core]'
 
     - name: Clone or update AgnosticD repository
       uses: appleboy/ssh-action@v0.1.10
@@ -74,31 +75,6 @@ jobs:
             git clone ${{ inputs.agnosticd_repo }} $HOME/agnosticd
           fi
 
-    #- name: Configure SSH
-    #  uses: appleboy/ssh-action@v0.1.10
-    #  with:
-    #    host: ${{ env.HOSTNAME }}
-    #    username: ${{ secrets.USERNAME }}
-    #    key: ${{ secrets.KEY }}
-    #    port: ${{ secrets.PORT }}
-    #    command_timeout: 30m
-    #    script: | 
-    #      mkdir -p ~/.ssh
-    #      echo "${{ secrets.KEY }}" > ~/.ssh/github-actions
-    #      chmod 600 ~/.ssh/github-actions
-
-    - name: Create Ansible hosts file
-      uses: appleboy/ssh-action@v0.1.10
-      with:
-        host: ${{ env.HOSTNAME }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.KEY }}
-        port: ${{ secrets.PORT }}
-        command_timeout: 30m
-        script: | 
-          echo "[all]" > /tmp/hosts 
-          echo "control ansible_host=${{ inputs.hostname }} ansible_connection=ssh ansible_user=${{ secrets.USERNAME }} ansible_ssh_private_key_file=~/.ssh/github-actions" >> /tmp/hosts
-
     - name: Copy extra_vars.yml to target system
       uses: appleboy/scp-action@v0.1.7
       with:
@@ -107,7 +83,7 @@ jobs:
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
         source: "agnosticd_templates/ocp-workloads/${{ inputs.agnosticd_workload }}.yaml"
-        target: "/tmp/"
+        target: "$HOME/agnosticd/ansible/configs/${{ inputs.agnosticd_workload }}.yaml"
 
     - name: Run Ansible Playbook for Create
       if: ${{ inputs.agnosticd_action == 'create' }}
@@ -120,15 +96,9 @@ jobs:
         command_timeout: 30m
         script: |
           export KUBECONFIG=${{ inputs.kubeconfig_path }}
-          ansible-playbook -i /tmp/hosts $HOME/agnosticd/ansible/configs/ocp-workloads/run_workload.yml \
-            -e "ansible_user=${{ secrets.USERNAME }}" \
-            -e "ocp_username=${{ inputs.openshift_user }}" \
-            -e "ansible_password=${{ secrets.ANSIBLE_PASSWORD }}" \
-            -e "ocp_workload=${{ inputs.agnosticd_workload }}" \
-            -e "silent=False" \
-            -e "guid=${{ inputs.guid }}" \
-            -e "ACTION=${{ inputs.agnosticd_action }}" \
-            -e "@/tmp/agnosticd_templates/ocp-workloads/${{ inputs.agnosticd_workload }}.yaml"
+          ansible-navigator run ansible/main.yml \
+            --eei quay.io/agnosticd/ee-multicloud:latest \
+            -e @ansible/configs/${{ inputs.agnosticd_workload }}.yaml  -m stdout
 
     - name: Run Ansible Playbook for Delete
       if: ${{ inputs.agnosticd_action == 'remove' }}
@@ -141,12 +111,6 @@ jobs:
         command_timeout: 30m
         script: |
           export KUBECONFIG=${{ inputs.kubeconfig_path }}
-          ansible-playbook -i /tmp/hosts $HOME/agnosticd/ansible/configs/ocp-workloads/destroy.yml \
-            -e "ansible_user=${{ secrets.USERNAME }}" \
-            -e "ocp_username=${{ inputs.openshift_user }}" \
-            -e "ansible_password=${{ secrets.ANSIBLE_PASSWORD }}" \
-            -e "ocp_workload=${{ inputs.agnosticd_workload }}" \
-            -e "silent=False" \
-            -e "guid=${{ inputs.guid }}" \
-            -e "ACTION=destroy" \
-            -e "@/tmp/agnosticd_templates/ocp-workloads/${{ inputs.agnosticd_workload }}.yaml"
+          ansible-navigator run ansible/destroy.yml \
+            --eei quay.io/agnosticd/ee-multicloud:latest \
+            -e @ansible/configs/${{ inputs.agnosticd_workload }}.yaml  -m stdout
