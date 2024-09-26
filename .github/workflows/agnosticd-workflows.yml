@@ -84,6 +84,7 @@ jobs:
     #      chmod 600 ~/.ssh/github-actions
 
     - name: Create Ansible hosts file
+      uses: appleboy/scp-action@v0.1.10
       with:
         host: ${{ env.HOSTNAME }}
         username: ${{ secrets.USERNAME }}
