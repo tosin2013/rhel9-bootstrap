@@ -6,6 +6,10 @@ on:
         description: 'hostname'
         required: false
         default: hostname
+      kubeconfig_path:
+        description: 'Path to KUBECONFIG file'
+        required: false
+        default: /root/cluster/auth/kubeconfig
       agnosticd_repo:
         description: 'Ansible Agnostic Deployer, AKA AAD, AKA AgnosticD, is a fully automated 2 Phase deployer for building and deploying everything from basic infrastructure to fully configured running application environments running on either public Cloud Providers or OpenShift clusters.'
         required: false
@@ -48,12 +52,7 @@ jobs:
         command_timeout: 30m
         script: | 
           sudo dnf install wget openssh-clients sshpass ansible-core openssl python3-jmespath -y
-          if [ -f "/root/cluster/auth/kubeconfig" ]; then
-            export KUBECONFIG=/root/cluster/auth/kubeconfig
-          else
-            echo "KUBECONFIG path does not exist. Exiting pipeline."
-            exit 1
-          fi
+          export KUBECONFIG=${{ inputs.kubeconfig_path }}
           if [ -d "$HOME/agnosticd" ]; then
             cd $HOME/agnosticd
             git pull
