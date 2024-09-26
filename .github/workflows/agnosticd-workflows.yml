@@ -41,6 +41,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Set Environment Variables
+      run: |
+        echo "HOSTNAME=${{ github.event.inputs.hostname }}" >> $GITHUB_ENV
+
     - name: Install dependencies
       uses: appleboy/ssh-action@v0.1.10
       with:
