@@ -1,12 +1,19 @@
 ---
 cloud_provider: none
 env_type: ocp-workloads
+guid: CHANGEME
 
-ocp_username: ${{ inputs.openshift_user }}
-guid: ${{ inputs.guid }}
 
-ocp_workloads:
-  - ocp-workload-gogs
+cluster_workloads:
+  - name: ocp-workload-gogs
+    clusters:
+    - cluster_one
+
+cluster_one:   
+  api_ca_cert: ''
+  api_key: CHANGEME
+  api_url: CHANGEME
+
 
 # workload-specific vars
 gogs_project: "{{ guid }}-gogs"
