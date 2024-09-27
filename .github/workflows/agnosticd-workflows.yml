@@ -86,6 +86,19 @@ jobs:
         source: "agnosticd_templates/ocp-workloads/${{ inputs.agnosticd_workload }}.yaml"
         target: "${{ secrets.USERNAME }}/agnosticd/ansible/configs/${{ inputs.agnosticd_workload }}.yaml"
 
+    - name: Update workload YAML with secrets and GUID
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ env.HOSTNAME }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: ${{ secrets.PORT }}
+        command_timeout: 30m
+        script: |
+          yq e '.cluster_one.api_key = "'${{ secrets.OPENSHIFT_API_KEY }}'"' -i "${{ secrets.USERNAME }}/agnosticd/ansible/configs/${{ inputs.agnosticd_workload }}.yaml"
+          yq e '.cluster_one.api_url = "'${{ secrets.OPENSHIFT_API_URL }}'"' -i "${{ secrets.USERNAME }}/agnosticd/ansible/configs/${{ inputs.agnosticd_workload }}.yaml"
+          yq e '.guid = "'${{ inputs.guid }}'"' -i "${{ secrets.USERNAME }}/agnosticd/ansible/configs/${{ inputs.agnosticd_workload }}.yaml"
+
     - name: Run Ansible Playbook for Create
       if: ${{ inputs.agnosticd_action == 'create' }}
       uses: appleboy/ssh-action@v0.1.10
