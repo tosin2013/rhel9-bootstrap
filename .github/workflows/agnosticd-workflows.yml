@@ -33,6 +33,12 @@ on:
         description: OpenShift user
         required: true
         default: admin
+      openshift_api_key:
+        description: 'OpenShift API Key'
+        required: true
+      openshift_api_url:
+        description: 'OpenShift API URL'
+        required: true
 
 jobs:
   agnosticd_deployment:
