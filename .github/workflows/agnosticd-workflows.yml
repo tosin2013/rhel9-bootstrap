@@ -62,9 +62,11 @@ jobs:
         command_timeout: 30m
         script: | 
           sudo dnf install wget openssh-clients sshpass ansible-core openssl python3-jmespath -y
-          sudo pip3 install openshift pyyaml kubernetes jmespath
+          sudo pip3 install openshift pyyaml kubernetes jmespath wget
           ansible-galaxy collection install kubernetes.core community.general
           pip3 install 'ansible-navigator[ansible-core]'
+          wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
+          chmod +x /usr/bin/yq
 
     - name: Clone or update AgnosticD repository
       uses: appleboy/ssh-action@v0.1.10
