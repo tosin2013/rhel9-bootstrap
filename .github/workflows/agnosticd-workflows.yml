@@ -83,7 +83,7 @@ jobs:
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
         source: "agnosticd_templates/ocp-workloads/${{ inputs.agnosticd_workload }}.yaml"
-        target: "${{ secrets.USERNAME }}/agnosticd/ansible/configs/${{ inputs.agnosticd_workload }}.yaml"
+        target: "/home/${{ secrets.USERNAME }}/agnosticd/ansible/configs/${{ inputs.agnosticd_workload }}.yaml"
 
     - name: Update workload YAML with secrets and GUID
       uses: appleboy/ssh-action@v0.1.10
