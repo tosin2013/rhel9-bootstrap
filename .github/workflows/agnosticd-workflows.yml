@@ -19,8 +19,8 @@ on:
         required: true
         type: choice
         options:
+          - ocp4_workload_redhat_developer_hub_rto
           - ocp4_workload_redhat_developer_hub
-          - gogs-workload
       agnosticd_action:
         description: AgnosticD action to perform (create/remove)
         required: true
