@@ -33,13 +33,6 @@ on:
         description: OpenShift user
         required: true
         default: admin
-      openshift_api_key:
-        description: 'OpenShift API Key'
-        required: true
-      openshift_api_url:
-        description: 'OpenShift API URL'
-        required: true
-
 jobs:
   agnosticd_deployment:
     runs-on: ubuntu-latest
@@ -101,9 +94,9 @@ jobs:
         port: ${{ secrets.PORT }}
         command_timeout: 30m
         script: |
-          yq e '.cluster_one.api_key = "'${{ secrets.OPENSHIFT_API_KEY }}'"' -i "/home/${{ secrets.USERNAME }}/agnosticd/ansible/configs/${{ inputs.agnosticd_workload }}.yaml"
-          yq e '.cluster_one.api_url = "'${{ secrets.OPENSHIFT_API_URL }}'"' -i "/home/${{ secrets.USERNAME }}/agnosticd/ansible/configs/${{ inputs.agnosticd_workload }}.yaml"
-          yq e '.guid = "'${{ inputs.guid }}'"' -i "/home/${{ secrets.USERNAME }}/agnosticd/ansible/configs/${{ inputs.agnosticd_workload }}.yaml"
+          yq e '.cluster_one.api_key = "'${{ secrets.OPENSHIFT_API_KEY }}'"' -i "/home/${{ secrets.USERNAME }}/agnosticd/ansible/configs/${{ inputs.agnosticd_workload }}.yaml" || exit $?
+          yq e '.cluster_one.api_url = "'${{ secrets.OPENSHIFT_API_URL }}'"' -i "/home/${{ secrets.USERNAME }}/agnosticd/ansible/configs/${{ inputs.agnosticd_workload }}.yaml" || exit $?
+          yq e '.guid = "'${{ inputs.guid }}'"' -i "/home/${{ secrets.USERNAME }}/agnosticd/ansible/configs/${{ inputs.agnosticd_workload }}.yaml" || exit $?
 
     - name: Run Ansible Playbook for Create
       if: ${{ inputs.agnosticd_action == 'create' }}
