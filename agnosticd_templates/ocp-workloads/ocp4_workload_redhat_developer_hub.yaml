@@ -13,6 +13,7 @@ cluster_workloads:
 
 cluster_one:   
   api_ca_cert: ''
+  validate_certs: false
   api_key: sha256~XXXXXXX
   api_url: https://api.ocp4.example.com:6443
 
