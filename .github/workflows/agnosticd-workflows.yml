@@ -108,7 +108,7 @@ jobs:
         port: ${{ secrets.PORT }}
         command_timeout: 30m
         script: |
-          oc login --token=${{ secrets.OPENSHIFT_API_KEY }} --server=${{ secrets.OPENSHIFT_API_URL }}
+          oc login --token=${{ secrets.OPENSHIFT_API_KEY }} --server=${{ secrets.OPENSHIFT_API_URL }}  --insecure-skip-tls-verify=true
           if ! oc whoami &> /dev/null; then
             echo "You are not logged into OpenShift. Please log in using 'oc login'."
             exit 1
