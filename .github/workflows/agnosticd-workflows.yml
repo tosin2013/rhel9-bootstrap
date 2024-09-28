@@ -116,6 +116,10 @@ jobs:
         command_timeout: 30m
         script: |
           export KUBECONFIG=${{ inputs.kubeconfig_path }}
+          if ! oc whoami &> /dev/null; then
+            echo "You are not logged into OpenShift. Please log in using 'oc login'."
+            exit 1
+          fi
           cd $HOME/agnosticd
           ansible-navigator run ansible/main.yml \
             --eei quay.io/agnosticd/ee-multicloud:latest \
