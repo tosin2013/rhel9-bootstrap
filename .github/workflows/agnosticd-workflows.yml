@@ -76,14 +76,16 @@ jobs:
           fi
 
     - name: Copy extra_vars.yml to target system
-      uses: appleboy/scp-action@v0.1.7
+      uses: appleboy/ssh-action@v0.1.10
       with:
         host: ${{ env.HOSTNAME }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
-        source: "agnosticd_templates/ocp-workloads/${{ inputs.agnosticd_workload }}.yaml"
-        target: "/home/${{ secrets.USERNAME }}/agnosticd/ansible/configs/"
+        command_timeout: 30m
+        script: |
+          cd /home/lab-user/agnosticd/ansible/configs
+          curl -OL https://raw.githubusercontent.com/tosin2013/rhel9-bootstrap/refs/heads/main/agnosticd_templates/ocp-workloads/${{ inputs.agnosticd_workload }}.yaml
 
     - name: Update workload YAML with secrets and GUID
       uses: appleboy/ssh-action@v0.1.10
