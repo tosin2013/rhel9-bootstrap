@@ -17,7 +17,7 @@ cluster_one:
   api_url: https://api.ocp4.example.com:6443
 
 target_host: localhost
-ocp4_username: system:admin
+ocp4_username: kubeadmin
 become_override: false
 silent: false
 
