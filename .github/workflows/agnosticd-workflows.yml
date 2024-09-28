@@ -65,9 +65,6 @@ jobs:
           sudo pip3 install openshift pyyaml kubernetes jmespath wget
           ansible-galaxy collection install kubernetes.core community.general
           pip3 install 'ansible-navigator[ansible-core]'
-          mkdir ./bin
-          wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O ./bin/yq
-          chmod +x ./bin/yq
 
     - name: Clone or update AgnosticD repository
       uses: appleboy/ssh-action@v0.1.10
@@ -104,9 +101,9 @@ jobs:
         port: ${{ secrets.PORT }}
         command_timeout: 30m
         script: |
-          ./bin/yq e '.cluster_one.api_key = "'${{ secrets.OPENSHIFT_API_KEY }}'"' -i "${{ secrets.USERNAME }}/agnosticd/ansible/configs/${{ inputs.agnosticd_workload }}.yaml"
-          ./bin/yq e '.cluster_one.api_url = "'${{ secrets.OPENSHIFT_API_URL }}'"' -i "${{ secrets.USERNAME }}/agnosticd/ansible/configs/${{ inputs.agnosticd_workload }}.yaml"
-          ./bin/yq e '.guid = "'${{ inputs.guid }}'"' -i "${{ secrets.USERNAME }}/agnosticd/ansible/configs/${{ inputs.agnosticd_workload }}.yaml"
+          yq e '.cluster_one.api_key = "'${{ secrets.OPENSHIFT_API_KEY }}'"' -i "/home/${{ secrets.USERNAME }}/agnosticd/ansible/configs/${{ inputs.agnosticd_workload }}.yaml"
+          yq e '.cluster_one.api_url = "'${{ secrets.OPENSHIFT_API_URL }}'"' -i "/home/${{ secrets.USERNAME }}/agnosticd/ansible/configs/${{ inputs.agnosticd_workload }}.yaml"
+          yq e '.guid = "'${{ inputs.guid }}'"' -i "/home/${{ secrets.USERNAME }}/agnosticd/ansible/configs/${{ inputs.agnosticd_workload }}.yaml"
 
     - name: Run Ansible Playbook for Create
       if: ${{ inputs.agnosticd_action == 'create' }}
