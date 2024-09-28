@@ -35,8 +35,6 @@ if __name__ == "__main__":
     parser.add_argument("--agnosticd_action", required=True, choices=["create", "remove"], help="AgnosticD action to perform")
     parser.add_argument("--guid", required=True, help="GUID")
     parser.add_argument("--openshift_user", required=True, help="OpenShift user")
-    parser.add_argument("--openshift-api-key", required=True, help="OpenShift API key")
-    parser.add_argument("--openshift-api-url", required=True, help="OpenShift API URL")
     
     args = parser.parse_args()
     
@@ -46,9 +44,7 @@ if __name__ == "__main__":
         "agnosticd_workload": args.agnosticd_workload,
         "agnosticd_action": args.agnosticd_action,
         "guid": args.guid,
-        "openshift_user": args.openshift_user,
-        "openshift_api_key": args.openshift_api_key,
-        "openshift_api_url": args.openshift_api_url
+        "openshift_user": args.openshift_user
     }
     
     trigger_workflow(args.owner, args.repo, args.token, args.branch, inputs)
