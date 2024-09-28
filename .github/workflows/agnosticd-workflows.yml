@@ -69,10 +69,11 @@ jobs:
         command_timeout: 30m
         script: | 
           if [ -d "$HOME/agnosticd" ]; then
-            cd $HOME/agnosticd
+            cd /home/${{ secrets.USERNAME }}/agnosticd
             git pull
           else
-            git clone ${{ inputs.agnosticd_repo }} $HOME/agnosticd
+            git clone ${{ inputs.agnosticd_repo }} /home/${{ secrets.USERNAME }}/agnosticd
+            cd /home/${{ secrets.USERNAME }}/agnosticd
             git checkout ocp4_workload_redhat_developer_hub
           fi
 
