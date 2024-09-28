@@ -73,6 +73,7 @@ jobs:
             git pull
           else
             git clone ${{ inputs.agnosticd_repo }} $HOME/agnosticd
+            git checkout ocp4_workload_redhat_developer_hub
           fi
 
     - name: Copy extra_vars.yml to target system
