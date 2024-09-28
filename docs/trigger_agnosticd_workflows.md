@@ -14,7 +14,7 @@ This document explains how to trigger the GitHub workflow located at `.github/wo
 3. Run the script using the following command:
 
    ```bash
-   python3 trigger_agnosticd_workflows.py --owner YOUR_GITHUB_OWNER --repo YOUR_GITHUB_REPO --token YOUR_GITHUB_TOKEN --hostname YOUR_HOSTNAME --agnosticd_workload ocp4_workload_redhat_developer_hub --agnosticd_action create --guid YOUR_GUID --openshift_user YOUR_OPENSHIFT_USER 
+   python3 trigger_agnosticd_workflows.py --owner YOUR_GITHUB_OWNER --repo YOUR_GITHUB_REPO --token YOUR_GITHUB_TOKEN --hostname YOUR_HOSTNAME --agnosticd_workload ocp4_workload_redhat_developer_hub --agnosticd_action create --guid YOUR_GUID --openshift_user YOUR_OPENSHIFT_USER --openshift_api_key YOUR_OPENSHIFT_API_KEY --openshift_api_url YOUR_OPENSHIFT_API_URL
    ```
 
 4. Replace the placeholders with your actual values:
@@ -24,6 +24,8 @@ This document explains how to trigger the GitHub workflow located at `.github/wo
    - `YOUR_HOSTNAME`: The hostname for the workflow.
    - `YOUR_GUID`: The GUID for the workflow.
    - `YOUR_OPENSHIFT_USER`: The OpenShift user for the workflow.
+   - `YOUR_OPENSHIFT_API_KEY`: Your OpenShift API key.
+   - `YOUR_OPENSHIFT_API_URL`: Your OpenShift API URL.
 
 ## Notes
 
