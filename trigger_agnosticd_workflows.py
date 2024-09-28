@@ -20,7 +20,6 @@ def trigger_workflow(owner, repo, token, branch="main", inputs=None):
     
     if response.status_code == 204:
         print("Workflow triggered successfully.")
-        print(response.json())
 
 
 def get_public_key(owner, repo, token):
