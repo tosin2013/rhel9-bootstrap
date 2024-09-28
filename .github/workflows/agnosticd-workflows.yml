@@ -110,7 +110,9 @@ jobs:
         port: ${{ secrets.PORT }}
         command_timeout: 30m
         script: |
-          oc login --token=${{ secrets.OPENSHIFT_API_KEY }} --server=${{ secrets.OPENSHIFT_API_URL }}  --insecure-skip-tls-verify=true
+          sudo cp /root/cluster/auth/kubeconfig /home/${{ secrets.USERNAME }}/
+          sudo chown ${{ secrets.USERNAME }}:users /home/${{ secrets.USERNAME }}/kubeconfig
+          export KUBECONFIG=/home/${{ secrets.USERNAME }}/kubeconfig
           if ! oc whoami &> /dev/null; then
             echo "You are not logged into OpenShift. Please log in using 'oc login'."
             exit 1
@@ -118,6 +120,7 @@ jobs:
           cd $HOME/agnosticd
           ansible-navigator run ansible/main.yml \
             --eei quay.io/agnosticd/ee-multicloud:latest \
+            --pass-environment-variable KUBECONFIG \
             -e @ansible/configs/${{ inputs.agnosticd_workload }}.yaml  -m stdout -vvv
 
     - name: Run Ansible Playbook for Delete
