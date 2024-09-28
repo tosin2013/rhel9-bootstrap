@@ -1,4 +1,6 @@
 import requests
+import base64
+from nacl import public
 
 def trigger_workflow(owner, repo, token, branch="main", inputs=None):
     """
@@ -18,9 +20,45 @@ def trigger_workflow(owner, repo, token, branch="main", inputs=None):
     
     if response.status_code == 204:
         print("Workflow triggered successfully.")
-    else:
-        print(f"Failed to trigger workflow. Status code: {response.status_code}")
         print(response.json())
+
+
+def get_public_key(owner, repo, token):
+    """Retrieves the public key for encrypting secrets."""
+    url = f"https://api.github.com/repos/{owner}/{repo}/actions/secrets/public-key"
+    headers = {
+        "Authorization": f"token {token}",
+        "Accept": "application/vnd.github.v3+json"
+    }
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+    return response.json()
+
+
+def encrypt_secret(public_key_info, secret_value):
+    """Encrypts a secret value using the public key."""
+    public_key = public.PublicKey(base64.b64decode(public_key_info["key"]))
+    sealed_box = public.SealedBox(public_key)
+    encrypted = sealed_box.encrypt(secret_value.encode("utf-8"))
+    return base64.b64encode(encrypted).decode("utf-8")
+
+
+def update_secret(owner, repo, token, secret_name, secret_value):
+    """Updates a GitHub secret with the encrypted value."""
+    url = f"https://api.github.com/repos/{owner}/{repo}/actions/secrets/{secret_name}"
+    headers = {
+        "Authorization": f"token {token}",
+        "Accept": "application/vnd.github.v3+json"
+    }
+    public_key_info = get_public_key(owner, repo, token)
+    encrypted_value = encrypt_secret(public_key_info, secret_value)
+    data = {
+        "encrypted_value": encrypted_value,
+        "key_id": public_key_info["key_id"]
+    }
+    response = requests.put(url, headers=headers, json=data)
+    response.raise_for_status()
+
 
 if __name__ == "__main__":
     import argparse
@@ -35,20 +73,18 @@ if __name__ == "__main__":
     parser.add_argument("--agnosticd_action", required=True, choices=["create", "remove"], help="AgnosticD action to perform")
     parser.add_argument("--guid", required=True, help="GUID")
     parser.add_argument("--openshift_user", required=True, help="OpenShift user")
-    parser.add_argument("--openshift_api_key", required=True, help="OpenShift API key")
-    parser.add_argument("--openshift_api_url", required=True, help="OpenShift API URL")
-    
     args = parser.parse_args()
-    
+
     inputs = {
         "hostname": args.hostname,
         "agnosticd_repo": args.agnosticd_repo,
         "agnosticd_workload": args.agnosticd_workload,
         "agnosticd_action": args.agnosticd_action,
         "guid": args.guid,
-        "openshift_user": args.openshift_user,
-        "openshift_api_key": args.openshift_api_key,
-        "openshift_api_url": args.openshift_api_url
+        "openshift_user": args.openshift_user
     }
-    
+
     trigger_workflow(args.owner, args.repo, args.token, args.branch, inputs)
+
+    update_secret(args.owner, args.repo, args.token, "OPENSHIFT_API_KEY", args.openshift_api_key)
+    update_secret(args.owner, args.repo, args.token, "OPENSHIFT_API_URL", args.openshift_api_url)
