@@ -6,7 +6,7 @@ guid: CHANGEME
 
 
 cluster_workloads:
-  - name: ocp-workload-gogs
+  - name: ocp4_workload_argocd_quay_todo_app
     clusters:
     - cluster_one
 
