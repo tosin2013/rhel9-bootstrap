@@ -46,3 +46,7 @@ ocp4_workload_pipelines_defaults:
 
 target_host: localhost
 
+users:
+  - user1
+  - user2
+  - user3
